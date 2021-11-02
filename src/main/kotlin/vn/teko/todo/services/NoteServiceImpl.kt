@@ -9,17 +9,25 @@ import java.time.LocalDateTime
 class NoteServiceImpl(
     private val noteRepository: NoteRepository,
     private val noteColorRepository: NoteColorRepository,
-    private val colorRepository: ColorRepository
+    private val colorRepository: ColorRepository,
+    private val noteLabelModelRepository: NoteLabelModelRepository
 ) : NoteService {
 
     override fun getNotes(): List<Note> {
         val notes = noteRepository.findAll().map { it.toNote(noteRepository.getnotecolor(it.id), colorRepository.findById(noteRepository.getnotecolor(it.id)).get().toColor()) }
+        notes.map {
+            it.labels = noteLabelModelRepository.getLabelByNote(it.id).map { it.toLabel() }
+        }
         return notes
     }
     override fun getNote(id: Long): Note {
         val optionalNoteModel = noteRepository.findById(id).orElseThrow { NotFoundException(message = "not found noteId = $id ") }
         val colorId = noteRepository.getnotecolor(optionalNoteModel.id)
-        return optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
+        val note = optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
+        note.apply {
+            labels = noteLabelModelRepository.getLabelByNote(note.id).map { it.toLabel() }
+        }
+        return note
     }
 
     override fun createNote(note: Note): Note {

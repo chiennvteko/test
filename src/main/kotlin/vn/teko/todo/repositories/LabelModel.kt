@@ -10,8 +10,6 @@ data class LabelModel(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
     var name: String,
-    @ManyToMany(mappedBy = "labels")
-    val noteModels: List<NoteModel> = listOf(),
 )
 
 fun LabelModel.toLabel() : Label = Label(
