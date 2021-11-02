@@ -1,5 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: db/changelog/changelog.sql
-  - include:
-      file: db/changelog/dataset.sql
