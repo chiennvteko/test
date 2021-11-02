@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity
 import vn.teko.todo.resquest.AddNoteRequest
 import vn.teko.todo.resquest.UpdateNoteRequest
 import vn.teko.todo.resquest.toNote
-import vn.teko.todo.services.ColorService
 import vn.teko.todo.services.NoteService
 import javax.validation.Valid
 
@@ -13,7 +12,6 @@ import javax.validation.Valid
 @RequestMapping("/api/notes")
 class NoteController(
     private val noteSevice: NoteService,
-    private val colorService: ColorService
 ) {
 
     @GetMapping
@@ -26,16 +24,14 @@ class NoteController(
     fun getNote(
         @PathVariable id: Long,
     ): ResponseEntity<NoteDto> {
-        val note = noteSevice.getNote(id)
-        return ResponseEntity.ok(note.toNoteDto())
+        return ResponseEntity.ok(noteSevice.getNote(id).toNoteDto())
     }
 
     @PostMapping
     fun createNote(
         @Valid @RequestBody request: AddNoteRequest,
     ): ResponseEntity<NoteDto> {
-        val note = noteSevice.createNote(request.toNote())
-        return ResponseEntity.ok(note.toNoteDto())
+        return ResponseEntity.ok(noteSevice.createNote(request.toNote()).toNoteDto())
     }
 
     @PutMapping("/{id}")
@@ -43,16 +39,14 @@ class NoteController(
         @PathVariable id: Long,
         @Valid @RequestBody request: UpdateNoteRequest,
     ): ResponseEntity<NoteDto> {
-        val note = noteSevice.updateNote(id, request.toNote())
-        return ResponseEntity.ok(note.toNoteDto())
+        return ResponseEntity.ok(noteSevice.updateNote(id, request.toNote()).toNoteDto())
     }
 
     @DeleteMapping("/{id}")
-    fun deleteNote(
+    fun  deleteNote(
         @PathVariable id: Long,
     ): ResponseEntity<NoteDto> {
-        val note = noteSevice.deleteNote(id)
-        return ResponseEntity.ok(note.toNoteDto())
+        return ResponseEntity.ok(noteSevice.deleteNote(id).toNoteDto())
     }
 
 }

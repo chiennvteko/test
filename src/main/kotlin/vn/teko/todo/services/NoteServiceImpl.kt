@@ -38,7 +38,7 @@ class NoteServiceImpl(
         noteColorRepository.deleteByNoteId(note.id)
         noteColorRepository.save(NoteColorModel(
             noteId = note.id,
-            colorId = note.colorId
+            colorId = newNote.colorId
         ))
         note.apply {
             this.title = newNote.title
@@ -53,9 +53,7 @@ class NoteServiceImpl(
     override fun deleteNote(id: Long): Note {
         val optionalNoteModel = noteRepository.findById(id).orElseThrow { NotFoundException(message = "not found noteId = $id ") }
         val colorId = noteRepository.getnotecolor(optionalNoteModel.id)
-        return optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
         val note  = optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
-
         noteRepository.deleteById(id)
         return note
     }
