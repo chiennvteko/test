@@ -35,11 +35,12 @@ class LabelController(
         return ResponseEntity.ok(labelService.createLabel(request.toLabel()).toLabelDto())
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     fun updateLabel(
         @PathVariable id: Long,
         @Valid @RequestBody request: UpdateLabelRequest,
     ): ResponseEntity<LabelDto> {
+        println("asdfasdfasd")
         return  ResponseEntity.ok(labelService.updateLabel(id, request.toLabel()).toLabelDto())
     }
 
