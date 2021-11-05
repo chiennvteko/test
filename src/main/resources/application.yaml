@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/db_example
+    url: jdbc:mysql://localhost:3307/test_example
     username: root
     password: 123456
 
   liquibase:
-    url: jdbc:mysql://localhost:3307/db_example
+    url: jdbc:mysql://localhost:3307/test_example
     user: root
     password: 123456
     change-log: "classpath:/db/changelog/changelog-master.yaml"

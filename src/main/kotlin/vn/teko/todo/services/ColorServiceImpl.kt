@@ -7,10 +7,10 @@ import vn.teko.todo.repositories.*
 @Service
 class ColorServiceImpl(
     private val colorRepository: ColorRepository,
-    private val noteRepository: NoteRepository,
 ) : ColorService {
 
     override fun getColors(): List<Color> {
+        println("asfasdf")
         val colors = colorRepository.findAll().map { it.toColor() }
         return colors
     }
