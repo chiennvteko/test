@@ -1,6 +1,7 @@
 package vn.teko.todo.repositories
 
 import vn.teko.todo.services.Color
+import vn.teko.todo.services.Note
 import javax.persistence.*
 
 @Entity

@@ -10,7 +10,6 @@ class ColorServiceImpl(
 ) : ColorService {
 
     override fun getColors(): List<Color> {
-        println("asfasdf")
         val colors = colorRepository.findAll().map { it.toColor() }
         return colors
     }

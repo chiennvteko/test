@@ -10,15 +10,15 @@ class ColorController(
     private val colorService: ColorService,
 ) {
     @GetMapping
-    fun getColors(): List<ColorDto> {
+    fun getColors(): ResponseEntity<List<ColorDto>> {
         val colorDtos = colorService.getColors().map { it.toColorDto() }
-        return colorDtos
+        return ResponseEntity.ok(colorDtos)
     }
 
     @GetMapping("/{id}")
     fun getColor(
         @PathVariable id: Long,
-        ): ColorDto {
-        return colorService.getColor(id).toColorDto()
+        ): ResponseEntity<ColorDto> {
+        return ResponseEntity.ok(colorService.getColor(id).toColorDto())
     }
 }
