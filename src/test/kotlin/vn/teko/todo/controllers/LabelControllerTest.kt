@@ -1,12 +1,14 @@
 package vn.teko.todo.controllers
 
 import com.google.gson.Gson
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -16,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import vn.teko.todo.resquest.AddLabelRequest
+import vn.teko.todo.resquest.UpdateLabelRequest
+import vn.teko.todo.resquest.toLabel
 import vn.teko.todo.services.Label
 import vn.teko.todo.services.LabelService
 
@@ -28,6 +32,14 @@ internal class LabelControllerTest {
     @MockBean
     private lateinit var labelservice: LabelService
 
+    private val addRequest = AddLabelRequest(
+        id = 0,
+        name = "test add label 1"
+    )
+    private val updateRequest = UpdateLabelRequest(
+        id = 0,
+        name = "test update label 1"
+    )
     @BeforeEach
     fun setup() {
         val label1 = Label(
@@ -50,12 +62,23 @@ internal class LabelControllerTest {
         given(labelservice.getLabels()).willReturn(labels)
         given(labelservice.getLabel(1)).willReturn(label1)
         given(labelservice.getLabel(2)).willReturn(label2)
+        given(labelservice.createLabel(addRequest.toLabel())).willReturn(
+            Label(
+            id = 5,
+            name = "test add label 1",
+        ))
+        given(labelservice.updateLabel(1, updateRequest.toLabel())).willReturn(
+            Label(
+                id = 1,
+                name = "test update label 1",
+            ))
+        given(labelservice.deleteLabel(3)).willReturn(label3)
+
     }
 
 
     @Test
     fun getLabels() {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/labels").contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(4))
@@ -78,23 +101,30 @@ internal class LabelControllerTest {
 
     @Test
     fun createLabel() {
-        val request = AddLabelRequest(
-            id = 0,
-            name = "test1"
-        )
         val gson = Gson()
-        val requestJson = gson.toJson(request)
-        println(requestJson)
-        /*mockMvc.perform(MockMvcRequestBuilders.post("/api/labels").contentType(MediaType.APPLICATION_JSON).param(requestJson))
+        val requestJson = gson.toJson(addRequest)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/labels").contentType(MediaType.APPLICATION_JSON).content(requestJson))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn()*/
+            .andReturn()
+        Mockito.verify(labelservice).createLabel(addRequest.toLabel())
     }
 
     @Test
     fun updateLabel() {
+        val gson = Gson()
+        val requestJson = gson.toJson(updateRequest)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/labels/1").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn()
+        Mockito.verify(labelservice).updateLabel(1, updateRequest.toLabel())
+
     }
 
     @Test
     fun deleteLabel() {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/labels/3").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn()
+        Mockito.verify(labelservice).deleteLabel(3)
     }
 }
