@@ -1,6 +1,5 @@
 package vn.teko.todo.repositories
 
-
 import vn.teko.todo.services.Label
 import javax.persistence.*
 
