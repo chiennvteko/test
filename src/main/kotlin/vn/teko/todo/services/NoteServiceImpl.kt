@@ -16,7 +16,7 @@ class NoteServiceImpl(
 ) : NoteService {
 
     override fun getNotes(): List<Note> {
-        val notes = noteRepository.findAll().map { it.toNote(noteRepository.getnotecolor(it.id), colorRepository.findById(noteRepository.getnotecolor(it.id)).get().toColor()) }
+        val notes = noteRepository.findAll().map { it.toNote(noteColorRepository.getnotecolor(it.id), colorRepository.findById(noteColorRepository.getnotecolor(it.id)).get().toColor()) }
         notes.map {
             it.labels = noteLabelModelRepository.getLabelByNote(it.id).map { it.toLabel() }
         }
@@ -24,7 +24,7 @@ class NoteServiceImpl(
     }
     override fun getNote(id: Long): Note {
         val optionalNoteModel = noteRepository.findById(id).orElseThrow { NotFoundException(message = "not found noteId = $id ") }
-        val colorId = noteRepository.getnotecolor(optionalNoteModel.id)
+        val colorId = noteColorRepository.getnotecolor(optionalNoteModel.id)
         val note = optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
         note.apply {
             labels = noteLabelModelRepository.getLabelByNote(note.id).map { it.toLabel() }
@@ -34,7 +34,6 @@ class NoteServiceImpl(
 
     fun addLabelToNote(noteId: Long, labelId: Long) {
         if (labelRepository.findById(labelId).isPresent() == false)  return
-
         noteLabelModelRepository.save(NoteLabelModel(
             noteId = noteId,
             labelId = labelId,
@@ -62,7 +61,7 @@ class NoteServiceImpl(
 
     override fun updateNote(id: Long, newNote: Note): Note {
         val optionalNoteModel = noteRepository.findById(id).orElseThrow { NotFoundException(message = "not found noteId = $id ") }
-        val colorId = noteRepository.getnotecolor(optionalNoteModel.id)
+        val colorId = noteColorRepository.getnotecolor(optionalNoteModel.id)
         var note = optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
         noteColorRepository.deleteByNoteId(note.id)
         noteColorRepository.save(NoteColorModel(
@@ -90,7 +89,7 @@ class NoteServiceImpl(
 
     override fun deleteNote(id: Long): Note {
         val optionalNoteModel = noteRepository.findById(id).orElseThrow { NotFoundException(message = "not found noteId = $id ") }
-        val colorId = noteRepository.getnotecolor(optionalNoteModel.id)
+        val colorId = noteColorRepository.getnotecolor(optionalNoteModel.id)
         val note  = optionalNoteModel.toNote(colorId, colorRepository.findById(colorId).get().toColor())
         note.apply {
             labels = noteLabelModelRepository.getLabelByNote(note.id).map { it.toLabel() }

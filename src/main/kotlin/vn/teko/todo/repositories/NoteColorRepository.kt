@@ -14,5 +14,6 @@ interface NoteColorRepository:  CrudRepository<NoteColorModel, Long> {
     @Query("DELETE FROM NoteColorModel n WHERE n.noteId = :noteId")
     fun deleteByNoteId(@Param("noteId")id: Long)
 
-    fun findByNoteId(id: Long) : NoteColorModel
+    @Query("SELECT n.colorId FROM NoteColorModel n WHERE n.noteId = :noteId")
+    fun getnotecolor(@Param("noteId") noteId: Long) : Long
 }
