@@ -1,6 +1,6 @@
 package vn.teko.todo.controllers
 
-import com.google.gson.Gson
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
@@ -24,6 +24,8 @@ internal class ColorControllerTest {
     private lateinit var mockMvc: MockMvc
     @MockBean
     private lateinit var colorService: ColorService
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     @Test
     fun getColors() {
@@ -58,8 +60,7 @@ internal class ColorControllerTest {
             isDefault = false
         )
         val colors = listOf<Color>(color1, color2, color3, color4, color5)
-        val gson = Gson()
-        val colorsJSON = gson.toJson(colors.map { it.toColorDto() })
+        val colorsJSON = objectMapper.writeValueAsString(colors.map { it.toColorDto() })
         given(colorService.getColors()).willReturn(colors)
         mockMvc.perform(get("/api/colors").contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.content().json(colorsJSON))

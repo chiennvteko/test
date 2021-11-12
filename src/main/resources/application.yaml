@@ -12,3 +12,5 @@ spring:
     change-log: "classpath:/db/changelog/changelog-master.yaml"
     database-change-log-table: database_changelog
     database-change-log-lock-table: database_changelog_lock
+
+

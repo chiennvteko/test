@@ -1,6 +1,6 @@
 package vn.teko.todo.controllers
 
-import com.google.gson.Gson
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
@@ -31,6 +31,8 @@ internal class LabelControllerTest {
     private lateinit var mockMvc: MockMvc
     @MockBean
     private lateinit var labelservice: LabelService
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     private val addRequest = AddLabelRequest(
         id = 0,
@@ -101,8 +103,7 @@ internal class LabelControllerTest {
 
     @Test
     fun createLabel() {
-        val gson = Gson()
-        val requestJson = gson.toJson(addRequest)
+        val requestJson = objectMapper.writeValueAsString(addRequest)
         mockMvc.perform(MockMvcRequestBuilders.post("/api/labels").contentType(MediaType.APPLICATION_JSON).content(requestJson))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn()
@@ -111,8 +112,7 @@ internal class LabelControllerTest {
 
     @Test
     fun updateLabel() {
-        val gson = Gson()
-        val requestJson = gson.toJson(updateRequest)
+        val requestJson = objectMapper.writeValueAsString(updateRequest)
         mockMvc.perform(MockMvcRequestBuilders.put("/api/labels/1").contentType(MediaType.APPLICATION_JSON).content(requestJson))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn()
@@ -127,4 +127,6 @@ internal class LabelControllerTest {
             .andReturn()
         Mockito.verify(labelservice).deleteLabel(3)
     }
+
+
 }
