@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
@@ -25,7 +24,7 @@ internal class NoteServiceTest {
     @MockBean
     private lateinit var colorRepository: ColorRepository
     @MockBean
-    private lateinit var noteLabelModelRepository: NoteLabelModelRepository
+    private lateinit var noteLabelModelRepository: NoteLabelRepository
     @MockBean
     private lateinit var labelRepository: LabelRepository
 
@@ -125,9 +124,9 @@ internal class NoteServiceTest {
 
         Mockito.doNothing().`when`(noteColorRepository).deleteByNoteId(3)
 
-        given(noteColorRepository.getnotecolor(1)).willReturn(1)
-        given(noteColorRepository.getnotecolor(2)).willReturn(1)
-        given(noteColorRepository.getnotecolor(3)).willReturn(1)
+        given(noteColorRepository.getNoteColor(1)).willReturn(1)
+        given(noteColorRepository.getNoteColor(2)).willReturn(1)
+        given(noteColorRepository.getNoteColor(3)).willReturn(1)
         given(noteLabelModelRepository.getLabelByNote(1)).willReturn(listOf<Label>(label1, label2).map { it.toLabelModel() })
         given(noteLabelModelRepository.getLabelByNote(2)).willReturn(listOf<Label>(label1).map { it.toLabelModel() })
         given(noteLabelModelRepository.getLabelByNote(3)).willReturn(listOf<Label>(label2).map { it.toLabelModel() })

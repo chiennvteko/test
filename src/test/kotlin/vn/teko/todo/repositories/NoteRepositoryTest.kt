@@ -96,10 +96,20 @@ internal class NoteRepositoryTest {
         assertThat(note).isEqualTo(note1)
     }
 
+    @Test
     fun deleteById() {
-        noteRepository.deleteById(1)
+        val note1 = NoteModel(
+            id = 0,
+            title = "sss",
+            content = "conten1",
+            createAt = LocalDateTime.now(),
+            editedAt = LocalDateTime.now(),
+        )
+        entityManager.persist(note1)
+        val note = noteRepository.save(note1)
+        noteRepository.deleteById(note.id)
         entityManager.flush();
-        assertThat(noteRepository.findById(1).isPresent).isEqualTo(false)
+        assertThat(noteRepository.findById(note.id).isPresent).isEqualTo(false)
     }
 
 }

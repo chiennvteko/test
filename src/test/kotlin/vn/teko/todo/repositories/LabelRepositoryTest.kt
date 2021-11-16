@@ -70,10 +70,18 @@ internal class LabelRepositoryTest {
         assertThat(label).isEqualTo(label1)
     }
 
+    @Test
     fun deleteById() {
-        labelRepository.deleteById(1)
+        val label1 = LabelModel(
+            id = 0,
+            name = "sss",
+        )
+        entityManager.persist(label1)
+        val label = labelRepository.save(label1)
+        labelRepository.deleteById(label.id)
         entityManager.flush();
-        assertThat(labelRepository.findById(1).isPresent).isEqualTo(false)
+        assertThat(labelRepository.findById(label.id).isPresent).isEqualTo(false)
     }
+
 
 }
